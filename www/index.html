@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小明工具箱 - 您的一站式手机工具箱</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366F1', // 紫色主题
+                        secondary: '#4F46E5',
+                        accent: '#EC4899',
+                        dark: '#1E293B',
+                        light: '#F8FAFC'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .card-hover {
+                @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+            }
+        }
+    </style>
+</head>
+
+<body class="font-inter bg-gray-50 text-dark">
+    <!-- 导航栏 -->
+    <header class="bg-white shadow-sm fixed w-full z-50 transition-all duration-300" id="navbar">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="#" class="flex items-center">
+                        <img src="xm_util_logo.svg" alt="小明工具箱 Logo" class="h-8 w-8 mr-2">
+                        <span class="text-xl font-semibold text-dark">小明工具箱</span>
+                    </a>
+                </div>
+
+                <!-- 桌面导航 -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#features" class="text-gray-600 hover:text-primary font-medium">功能介绍</a>
+                    <a href="#notes" class="text-gray-600 hover:text-primary font-medium">备忘录</a>
+                    <a href="#date" class="text-gray-600 hover:text-primary font-medium">日期工具</a>
+                    <a href="#timer" class="text-gray-600 hover:text-primary font-medium">定时提醒</a>
+                    <a href="#calculator" class="text-gray-600 hover:text-primary font-medium">智能计算器</a>
+                </nav>
+
+                <!-- 移动端菜单按钮 -->
+                <div class="md:hidden">
+                    <button id="menu-toggle" class="text-gray-600 hover:text-primary focus:outline-none">
+                        <i class="fa fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 移动端导航菜单 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100">
+            <div class="container mx-auto px-4 py-3 space-y-1">
+                <a href="#features" class="block py-2 text-gray-600 hover:text-primary font-medium">功能介绍</a>
+                <a href="#notes" class="block py-2 text-gray-600 hover:text-primary font-medium">本地备忘录</a>
+                <a href="#date" class="block py-2 text-gray-600 hover:text-primary font-medium">日期工具</a>
+                <a href="#timer" class="block py-2 text-gray-600 hover:text-primary font-medium">定时提醒</a>
+                <a href="#calculator" class="block py-2 text-gray-600 hover:text-primary font-medium">智能计算器</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 英雄区域 -->
+    <section class="pt-24 pb-16 md:pt-32 md:pb-24 bg-gradient-to-br from-primary/5 to-primary/10">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0">
+                    <div class="flex items-center mb-4">
+                        <img src="xm_util_logo.svg" alt="小明工具箱 Logo" class="h-12 w-12 mr-3">
+                        <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold text-dark leading-tight">
+                            小明 <span class="text-primary">工具箱</span>
+                        </h1>
+                    </div>
+                    <p class="text-lg text-gray-600 mb-8 max-w-lg">
+                        集成本地备忘录、日期时间、定时提醒和智能计算器功能于一体的实用工具应用，让您的手机更加智能便捷。
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#features"
+                            class="bg-primary hover:bg-primary/90 text-white font-medium py-3 px-6 rounded-lg shadow-md transition-all duration-300 flex items-center">
+                            <i class="fa fa-rocket mr-2"></i> 了解更多
+                        </a>
+                        <a href="#" onclick="alert('尽请期待'); return false;"
+                            class="bg-white hover:bg-gray-50 text-primary border border-primary font-medium py-3 px-6 rounded-lg shadow-sm transition-all duration-300 flex items-center cursor-pointer">
+                            <i class="fa fa-code mr-2"></i> Flutter 开发
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex justify-center">
+                    <!-- 应用预览图 -->
+                    <div class="relative w-full max-w-sm">
+                        <div
+                            class="relative z-10 bg-white rounded-3xl shadow-xl overflow-hidden border-8 border-dark transform rotate-2">
+                            <div class="bg-gray-800 h-6 flex justify-center items-center">
+                                <div class="w-24 h-1.5 bg-gray-700 rounded-full"></div>
+                            </div>
+                            <div class="aspect-[9/19.5] bg-gray-100">
+                                <!-- 模拟应用界面 -->
+                                <div class="bg-white text-dark p-2 text-xs text-center">小明工具箱</div>
+                                <div class="p-2">
+                                    <!-- 备忘录模块 - 与Dart代码保持一致 -->
+                                    <div class="bg-white rounded-lg shadow p-2 mb-2">
+                                        <div class="text-xs font-medium text-gray-500">备忘录</div>
+                                        <div class="text-xs text-gray-600 mt-1">今天下午三点开会</div>
+                                    </div>
+                                    <!-- 日期时间模块 - 月日历和当前日期 -->
+                                    <div class="bg-white rounded-lg shadow p-2 mb-2">
+                                        <div class="text-xs font-medium text-gray-500">月日历</div>
+                                        <div class="mt-1">
+                                            <!-- 简化的日历显示 -->
+                                            <div class="text-xs font-medium text-gray-600 mb-1">2023年12月</div>
+                                            <!-- 星期表头 -->
+                                            <div class="grid grid-cols-7 gap-0.5 mb-1">
+                                                <div class="text-xs text-center text-gray-500">日</div>
+                                                <div class="text-xs text-center text-gray-500">一</div>
+                                                <div class="text-xs text-center text-gray-500">二</div>
+                                                <div class="text-xs text-center text-gray-500">三</div>
+                                                <div class="text-xs text-center text-gray-500">四</div>
+                                                <div class="text-xs text-center text-gray-500">五</div>
+                                                <div class="text-xs text-center text-gray-500">六</div>
+                                            </div>
+                                            <!-- 日期网格 -->
+                                            <div class="grid grid-cols-7 gap-0.5">
+                                                <div class="text-xs text-center text-gray-300">26</div>
+                                                <div class="text-xs text-center text-gray-300">27</div>
+                                                <div class="text-xs text-center text-gray-300">28</div>
+                                                <div class="text-xs text-center text-gray-300">29</div>
+                                                <div class="text-xs text-center text-gray-300">30</div>
+                                                <div class="text-xs text-center">1</div>
+                                                <div class="text-xs text-center">2</div>
+                                                <div class="text-xs text-center">3</div>
+                                                <div class="text-xs text-center">4</div>
+                                                <div class="text-xs text-center">5</div>
+                                                <div class="text-xs text-center">6</div>
+                                                <div class="text-xs text-center">7</div>
+                                                <div class="text-xs text-center">8</div>
+                                                <div class="text-xs text-center">9</div>
+                                                <div class="text-xs text-center">10</div>
+                                                <div class="text-xs text-center">11</div>
+                                                <div class="text-xs text-center bg-primary text-white rounded-full">12
+                                                </div>
+                                                <div class="text-xs text-center">13</div>
+                                                <div class="text-xs text-center">14</div>
+                                                <div class="text-xs text-center">15</div>
+                                                <div class="text-xs text-center">16</div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 text-xs text-gray-600">
+                                            今日事项：下午3点项目会议
+                                        </div>
+                                    </div>
+                                    <!-- 定时器模块 - 定时提醒功能 -->
+                                    <div class="bg-white rounded-lg shadow p-3 mb-2 border border-gray-100">
+                                        <div class="text-xs font-medium text-gray-900 font-bold mb-2">定时提醒</div>
+                                        <!-- 倒计时显示 -->
+                                        <div class="text-center mb-2">
+                                            <span class="text-lg font-mono font-bold text-indigo-500">00:00:00</span>
+                                        </div>
+                                        <!-- 控制按钮 -->
+                                        <div class="flex justify-center gap-1 mb-2">
+                                            <button
+                                                class="bg-indigo-500 text-white text-xs px-2 py-1 rounded">开始</button>
+                                            <button
+                                                class="bg-gray-50 text-gray-900 text-xs px-2 py-1 rounded">暂停</button>
+                                            <button
+                                                class="bg-gray-50 text-gray-900 text-xs px-2 py-1 rounded">重置</button>
+                                        </div>
+                                        <!-- 时间设置 -->
+                                        <div class="bg-gray-50 rounded-lg p-2 mb-2">
+                                            <div class="text-xs font-bold text-gray-700 mb-1">设置时间</div>
+                                            <div class="flex gap-1 text-xs">
+                                                <input type="text" placeholder="小时"
+                                                    class="flex-1 px-2 py-1 border border-gray-200 rounded text-xs">
+                                                <input type="text" placeholder="分钟"
+                                                    class="flex-1 px-2 py-1 border border-gray-200 rounded text-xs">
+                                                <input type="text" placeholder="秒"
+                                                    class="flex-1 px-2 py-1 border border-gray-200 rounded text-xs">
+                                            </div>
+                                        </div>
+                                        <!-- 自定义提醒 -->
+                                        <div class="bg-gray-50 rounded-lg p-2">
+                                            <div class="text-xs font-bold text-gray-700 mb-1">自定义提醒</div>
+                                            <input type="text" placeholder="提醒内容"
+                                                class="w-full px-2 py-1 border border-gray-200 rounded text-xs mb-1">
+                                            <div class="flex items-center gap-1 text-xs">
+                                                <input type="checkbox" id="repeat"
+                                                    class="rounded text-indigo-500 focus:ring-indigo-500">
+                                                <label for="repeat" class="text-gray-600">重复提醒</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 计算器模块 - 智能计算器功能 -->
+                                    <div class="bg-white rounded-lg shadow p-2 border border-gray-100">
+                                        <div class="text-xs font-medium text-gray-900 font-bold mb-1">智能计算器</div>
+                                        <!-- 显示区域 -->
+                                        <div class="bg-gray-100 p-1.5 rounded text-right text-sm mb-1.5">0</div>
+                                        <!-- 按钮网格 -->
+                                        <div class="grid grid-cols-4 gap-1">
+                                            <!-- 第一行 -->
+                                            <div class="bg-gray-200 rounded text-center py-1 text-xs">7</div>
+                                            <div class="bg-gray-200 rounded text-center py-1 text-xs">8</div>
+                                            <div class="bg-gray-200 rounded text-center py-1 text-xs">9</div>
+                                            <div class="bg-indigo-500 text-white rounded text-center py-1 text-xs">÷
+                                            </div>
+                                            <!-- 第二行 -->
+                                            <div class="bg-gray-200 rounded text-center py-1 text-xs">4</div>
+                                            <div class="bg-gray-200 rounded text-center py-1 text-xs">5</div>
+                                            <div class="bg-gray-200 rounded text-center py-1 text-xs">6</div>
+                                            <div class="bg-indigo-500 text-white rounded text-center py-1 text-xs">×
+                                            </div>
+                                            <!-- 第三行 -->
+                                            <div class="bg-gray-200 rounded text-center py-1 text-xs">1</div>
+                                            <div class="bg-gray-200 rounded text-center py-1 text-xs">2</div>
+                                            <div class="bg-gray-200 rounded text-center py-1 text-xs">3</div>
+                                            <div class="bg-indigo-500 text-white rounded text-center py-1 text-xs">-
+                                            </div>
+                                            <!-- 第四行 -->
+                                            <div class="bg-red-500 text-white rounded text-center py-1 text-xs">C</div>
+                                            <div class="bg-gray-200 rounded text-center py-1 text-xs">0</div>
+                                            <div class="bg-green-500 text-white rounded text-center py-1 text-xs">=
+                                            </div>
+                                            <div class="bg-indigo-500 text-white rounded text-center py-1 text-xs">+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 装饰元素 -->
+                        <div
+                            class="absolute -z-10 top-10 -right-6 w-full max-w-sm bg-gray-300 rounded-3xl transform -rotate-4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 功能特点 -->
+    <section id="features" class="py-16 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-2xl md:text-3xl font-bold text-dark mb-4">实用功能，触手可及</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    小明工具箱 集成了四种常用工具：本地备忘录、日期时间、定时提醒和智能计算器，满足您的日常需求，让生活更加便捷高效。
+                </p>
+            </div>
+
+            <!-- 功能卡片网格 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- 备忘录卡片 -->
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover" id="notes">
+                    <div class="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="fa fa-sticky-note text-2xl text-green-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-dark mb-3">本地备忘录</h3>
+                    <p class="text-gray-600">
+                        快速记录和保存重要信息，随时查看您的备忘录内容。
+                    </p>
+                    <a href="#" onclick="alert('尽请期待'); return false;"
+                        class="text-primary font-medium inline-flex items-center mt-4 hover:underline cursor-pointer">
+                        了解更多 <i class="fa fa-arrow-right ml-2 text-sm"></i>
+                    </a>
+                </div>
+
+                <!-- 日期工具卡片 -->
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover" id="date">
+                    <div class="w-14 h-14 bg-secondary/10 rounded-full flex items-center justify-center mb-4">
+                        <i class="fa fa-calendar text-2xl text-secondary"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-dark mb-3">日期时间</h3>
+                    <p class="text-gray-600">
+                        实时显示当前日期和时间，精确到秒，让您随时掌握时间动态。
+                    </p>
+                    <a href="#" onclick="alert('尽请期待'); return false;"
+                        class="text-primary font-medium inline-flex items-center mt-4 hover:underline cursor-pointer">
+                        了解更多 <i class="fa fa-arrow-right ml-2 text-sm"></i>
+                    </a>
+                </div>
+
+                <!-- 定时提醒卡片 -->
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover" id="timer">
+                    <div class="w-14 h-14 bg-accent/10 rounded-full flex items-center justify-center mb-4">
+                        <i class="fa fa-clock-o text-2xl text-accent"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-dark mb-3">定时提醒</h3>
+                    <p class="text-gray-600">
+                        设置倒计时和定时提醒，让您不再错过重要的时间节点。
+                    </p>
+                    <a href="#" onclick="alert('尽请期待'); return false;"
+                        class="text-primary font-medium inline-flex items-center mt-4 hover:underline cursor-pointer">
+                        了解更多 <i class="fa fa-arrow-right ml-2 text-sm"></i>
+                    </a>
+                </div>
+
+                <!-- 计算器卡片 -->
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover" id="calculator">
+                    <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                        <i class="fa fa-calculator text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-dark mb-3">智能计算器</h3>
+                    <p class="text-gray-600">
+                        简洁易用的计算器，支持基本的加减乘除运算，满足您的日常计算需求。
+                    </p>
+                    <a href="#" onclick="alert('尽请期待'); return false;"
+                        class="text-primary font-medium inline-flex items-center mt-4 hover:underline cursor-pointer">
+                        了解更多 <i class="fa fa-arrow-right ml-2 text-sm"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 功能详情区域 -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- 备忘录功能详情 -->
+            <div class="flex flex-col lg:flex-row items-center mb-20 gap-10">
+                <div class="lg:w-1/2 flex justify-center">
+                    <div class="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
+                        <h3 class="text-xl font-semibold mb-4 text-center">本地备忘录</h3>
+                        <div class="mb-4">
+                            <textarea class="w-full p-3 border border-gray-300 rounded-lg h-32"
+                                placeholder="输入备忘录内容..."></textarea>
+                            <button
+                                class="mt-2 bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary/90 transition-colors w-full">保存</button>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="text-sm text-gray-500 mb-2">已保存的备忘录</div>
+                            <div class="text-gray-700">今天下午三点开会讨论项目进度</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:w-1/2">
+                    <h2 class="text-2xl md:text-3xl font-bold text-dark mb-4">本地备忘录</h2>
+                    <p class="text-gray-600 mb-6">
+                        小明工具箱 的备忘录功能让您可以随时记录重要信息，方便快捷地保存和查看您的笔记内容。
+                        所有数据保存在本地，安全可靠。
+                    </p>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">简单易用的文本编辑功能</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">一键保存，快速记录重要信息</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">本地存储，数据安全可靠</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 日期时间功能详情 -->
+            <div class="flex flex-col lg:flex-row items-center mb-20 gap-10">
+                <div class="lg:w-1/2 flex justify-center">
+                    <div class="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
+                        <h3 class="text-xl font-semibold mb-4 text-center">当前日期时间</h3>
+                        <div class="text-center">
+                            <div id="date-display" class="text-2xl font-bold text-primary mb-2">2023年12月12日</div>
+                            <div id="time-display" class="text-3xl font-mono">14:30:25</div>
+                        </div>
+                        <div class="mt-6 grid grid-cols-7 gap-1 text-center text-xs">
+                            <div class="text-gray-500">日</div>
+                            <div class="text-gray-500">一</div>
+                            <div class="text-gray-500">二</div>
+                            <div class="text-gray-500">三</div>
+                            <div class="text-gray-500">四</div>
+                            <div class="text-gray-500">五</div>
+                            <div class="text-gray-500">六</div>
+                            <div class="py-1">26</div>
+                            <div class="py-1">27</div>
+                            <div class="py-1">28</div>
+                            <div class="py-1">29</div>
+                            <div class="py-1">30</div>
+                            <div class="py-1">1</div>
+                            <div class="py-1">2</div>
+                            <div class="py-1">3</div>
+                            <div class="py-1">4</div>
+                            <div class="py-1">5</div>
+                            <div class="py-1">6</div>
+                            <div class="py-1">7</div>
+                            <div class="py-1">8</div>
+                            <div class="py-1">9</div>
+                            <div class="py-1">10</div>
+                            <div class="py-1">11</div>
+                            <div class="py-1 bg-primary text-white rounded">12</div>
+                            <div class="py-1">13</div>
+                            <div class="py-1">14</div>
+                            <div class="py-1">15</div>
+                            <div class="py-1">16</div>
+                            <div class="py-1">17</div>
+                            <div class="py-1">18</div>
+                            <div class="py-1">19</div>
+                            <div class="py-1">20</div>
+                            <div class="py-1">21</div>
+                            <div class="py-1">22</div>
+                            <div class="py-1">23</div>
+                            <div class="py-1">24</div>
+                            <div class="py-1">25</div>
+                            <div class="py-1">26</div>
+                            <div class="py-1">27</div>
+                            <div class="py-1">28</div>
+                            <div class="py-1">29</div>
+                            <div class="py-1">30</div>
+                            <div class="py-1">31</div>
+                            <div class="py-1">1</div>
+                            <div class="py-1">2</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:w-1/2">
+                    <h2 class="text-2xl md:text-3xl font-bold text-dark mb-4">实时日期时间</h2>
+                    <p class="text-gray-600 mb-6">
+                        小明工具箱 提供精准的日期和时间显示功能，实时更新，让您随时掌握当前时间。
+                        还包含日历视图，方便您查看当月日期。
+                    </p>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">精确到秒的时间显示，自动更新</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">清晰的日期格式，便于阅读</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">简洁的日历视图，直观展示当月日期</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 定时提醒功能详情 -->
+            <div class="flex flex-col lg:flex-row items-center mb-20 gap-10">
+                <div class="lg:w-1/2 order-2 lg:order-1">
+                    <h2 class="text-2xl md:text-3xl font-bold text-dark mb-4">定时提醒</h2>
+                    <p class="text-gray-600 mb-6">
+                        小明工具箱 的定时提醒功能让您可以设置倒计时和提醒，不再错过重要的时间节点，帮助您合理安排时间。
+                    </p>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">设置精确到秒的倒计时</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">自定义提醒内容，一目了然</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">支持重复提醒功能，无需重复设置</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="lg:w-1/2 order-1 lg:order-2 flex justify-center">
+                    <div class="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
+                        <h3 class="text-xl font-semibold mb-4 text-center">定时提醒</h3>
+                        <div class="text-center">
+                            <div class="text-4xl font-mono font-bold text-dark mb-4">00:00:00</div>
+                            <div class="flex justify-center space-x-4 mb-6">
+                                <button
+                                    class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg font-medium transition-colors">开始</button>
+                                <button
+                                    class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors">暂停</button>
+                                <button
+                                    class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors">重置</button>
+                            </div>
+
+                            <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                                <div class="text-sm font-medium text-gray-500 mb-2">设置时间</div>
+                                <div class="flex space-x-2">
+                                    <div class="flex-1">
+                                        <input type="number" class="w-full p-2 border border-gray-300 rounded-lg"
+                                            placeholder="小时" min="0" max="99">
+                                    </div>
+                                    <div class="flex-1">
+                                        <input type="number" class="w-full p-2 border border-gray-300 rounded-lg"
+                                            placeholder="分钟" min="0" max="59">
+                                    </div>
+                                    <div class="flex-1">
+                                        <input type="number" class="w-full p-2 border border-gray-300 rounded-lg"
+                                            placeholder="秒" min="0" max="59">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <div class="text-sm font-medium text-gray-500 mb-2">自定义提醒</div>
+                                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg mb-2"
+                                    placeholder="提醒内容">
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="repeat" class="mr-2">
+                                    <label for="repeat" class="text-sm text-gray-600">重复提醒</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 智能计算器功能详情 -->
+            <div class="flex flex-col lg:flex-row items-center gap-10">
+                <div class="lg:w-1/2 order-2 lg:order-1">
+                    <h2 class="text-2xl md:text-3xl font-bold text-dark mb-4">智能计算器</h2>
+                    <p class="text-gray-600 mb-6">
+                        小明工具箱 的智能计算器功能简洁高效，支持基本的数学运算，包括加法、减法、乘法和除法。
+                        界面直观易用，适合日常各种计算场景使用。
+                    </p>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">简洁明了的用户界面，操作流畅</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">支持连续计算，快速得到结果</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                            <span class="text-gray-700">一键清除功能，方便重新计算</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="lg:w-1/2 order-1 lg:order-2 flex justify-center">
+                    <div class="bg-white p-4 rounded-xl shadow-lg w-full max-w-md">
+                        <div class="bg-gray-100 p-4 rounded-lg mb-4 text-right text-2xl font-medium">
+                            12345
+                        </div>
+                        <div class="grid grid-cols-4 gap-2">
+                            <button class="bg-gray-200 hover:bg-gray-300 py-3 rounded-lg font-medium">7</button>
+                            <button class="bg-gray-200 hover:bg-gray-300 py-3 rounded-lg font-medium">8</button>
+                            <button class="bg-gray-200 hover:bg-gray-300 py-3 rounded-lg font-medium">9</button>
+                            <button
+                                class="bg-primary text-white hover:bg-primary/90 py-3 rounded-lg font-medium">÷</button>
+                            <button class="bg-gray-200 hover:bg-gray-300 py-3 rounded-lg font-medium">4</button>
+                            <button class="bg-gray-200 hover:bg-gray-300 py-3 rounded-lg font-medium">5</button>
+                            <button class="bg-gray-200 hover:bg-gray-300 py-3 rounded-lg font-medium">6</button>
+                            <button
+                                class="bg-primary text-white hover:bg-primary/90 py-3 rounded-lg font-medium">×</button>
+                            <button class="bg-gray-200 hover:bg-gray-300 py-3 rounded-lg font-medium">1</button>
+                            <button class="bg-gray-200 hover:bg-gray-300 py-3 rounded-lg font-medium">2</button>
+                            <button class="bg-gray-200 hover:bg-gray-300 py-3 rounded-lg font-medium">3</button>
+                            <button
+                                class="bg-primary text-white hover:bg-primary/90 py-3 rounded-lg font-medium">-</button>
+                            <button
+                                class="bg-red-500 text-white hover:bg-red-600 py-3 rounded-lg font-medium">C</button>
+                            <button class="bg-gray-200 hover:bg-gray-300 py-3 rounded-lg font-medium">0</button>
+                            <button
+                                class="bg-green-500 text-white hover:bg-green-600 py-3 rounded-lg font-medium">=</button>
+                            <button
+                                class="bg-primary text-white hover:bg-primary/90 py-3 rounded-lg font-medium">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 下载区域 -->
+    <section class="py-16 bg-gradient-to-r from-primary to-secondary text-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10">
+                <img src="xm_util_logo.svg" alt="小明工具箱 Logo" class="h-16 w-16 mx-auto mb-4">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">立即体验 小明工具箱</h2>
+                <p class="text-lg text-white/90 max-w-2xl mx-auto">
+                    下载并安装 小明工具箱 应用，享受便捷的工具集成体验，让您的手机更加智能高效。
+                </p>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-6">
+                <a href="#" onclick="alert('尽请期待'); return false;"
+                    class="bg-white text-primary hover:bg-gray-100 font-medium py-3 px-6 rounded-lg shadow-md transition-all duration-300 flex items-center cursor-pointer">
+                    <i class="fa fa-apple text-2xl mr-2"></i>
+                    <div class="text-left">
+                        <div class="text-xs">下载</div>
+                        <div class="text-sm font-semibold">App Store</div>
+                    </div>
+                </a>
+
+                <a href="#" onclick="alert('尽请期待'); return false;"
+                    class="bg-white text-primary hover:bg-gray-100 font-medium py-3 px-6 rounded-lg shadow-md transition-all duration-300 flex items-center cursor-pointer">
+                    <i class="fa fa-android text-2xl mr-2"></i>
+                    <div class="text-left">
+                        <div class="text-xs">下载</div>
+                        <div class="text-sm font-semibold">Google Play</div>
+                    </div>
+                </a>
+
+                <a href="#" onclick="alert('尽请期待'); return false;"
+                    class="bg-white text-primary hover:bg-gray-100 font-medium py-3 px-6 rounded-lg shadow-md transition-all duration-300 flex items-center cursor-pointer">
+                    <i class="fa fa-desktop text-2xl mr-2"></i>
+                    <div class="text-left">
+                        <div class="text-xs">下载</div>
+                        <div class="text-sm font-semibold">桌面版</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <img src="xm_util_logo.svg" alt="小明工具箱 Logo" class="h-8 w-8 mr-2">
+                        <span class="text-xl font-semibold">小明工具箱</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        集成智能计算器、日期时间、定时提醒和备忘录功能于一体的实用工具应用。
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors"><i
+                                class="fa fa-facebook"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors"><i
+                                class="fa fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors"><i
+                                class="fa fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors"><i
+                                class="fa fa-github"></i></a>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">功能</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#notes" class="text-gray-400 hover:text-primary transition-colors">本地备忘录</a>
+                        </li>
+                        <li><a href="#date" class="text-gray-400 hover:text-primary transition-colors">日期时间</a></li>
+                        <li><a href="#timer" class="text-gray-400 hover:text-primary transition-colors">定时提醒</a></li>
+                        <li><a href="#calculator" class="text-gray-400 hover:text-primary transition-colors">智能计算器</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">关于我们</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">团队成员</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">联系我们</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">加入我们</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">支持</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">帮助中心</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">常见问题</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">隐私政策</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">使用条款</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500">
+                <p>&copy; 2025 小明工具箱. 保留所有权利。</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 导航栏滚动效果
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                navbar.classList.add('bg-white/95', 'backdrop-blur-sm');
+                navbar.classList.remove('bg-white');
+            } else {
+                navbar.classList.remove('bg-white/95', 'backdrop-blur-sm');
+                navbar.classList.add('bg-white');
+            }
+        });
+
+        // 移动端菜单切换
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+
+                    // 关闭移动菜单
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                }
+            });
+        });
+
+        // 实时时钟
+        function updateTime() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            document.getElementById('time-display').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+
+        // 初始化时钟
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        // 格式化当前日期
+        function formatCurrentDate() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const day = now.getDate().toString().padStart(2, '0');
+            document.getElementById('date-display').textContent = `${year}年${month}月${day}日`;
+        }
+
+        // 初始化日期
+        formatCurrentDate();
+    </script>
+</body>
+
+</html>
