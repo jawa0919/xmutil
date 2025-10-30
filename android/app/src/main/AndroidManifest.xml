@@ -55,7 +55,7 @@
 
                 <data android:scheme="https" />
                 <data android:host="www.duibu.cn" />
-                <data android:path="/xmutilapp" />
+                <data android:pathPrefix="/xmutilapp" />
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
