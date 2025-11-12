@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Link Demo</title>
+</head>
+
+<body>
+    <h1>App Link Demo</h1>
+    <p id="href-link" style="color: blue;cursor: pointer;">查看本网页二维码</p>
+    <h3>duibuguanjiaapp</h3>
+    <a href="https://www.duibu.cn/duibuguanjiaapp?t=UniversalLinks" target="_blank">UniversalLinks</a>
+    <p></p>
+    <a href="duibuguanjia://duibuguanjiaapp?t=CustomSchemes" target="_blank">CustomSchemes</a>
+    <h4>xmutilapp</h4>
+    <a href="https://www.duibu.cn/xmutilapp?t=UniversalLinks" target="_blank">UniversalLinks</a>
+    <p></p>
+    <a href="xmutil://xmutilapp?t=CustomSchemes" target="_blank">CustomSchemes</a>
+    <p></p>
+    <p></p>
+    <p></p>
+    <script>
+        const hrefLink = document.getElementById('href-link');
+        hrefLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.open(`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${location.href}`, "_blank");
+        })
+    </script>
+</body>
+
+</html>
