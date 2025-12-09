@@ -45,6 +45,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  # 多渠道打包
+  flutter_flavorizr: ^2.4.1
 
 flutter:
   uses-material-design: true
@@ -63,3 +65,31 @@ flutter:
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
+
+flavorizr:
+  flavors:
+    # FIXME: 稳定版本 - "appleStoreId": "123456789"
+    prod:
+      app:
+        name: "App"
+        icon: "icons/icon_prod.png"
+      android:
+        applicationId: "top.meu6jia.app"
+      ios:
+        bundleId: "top.meu6jia.app"
+    uat:
+      app:
+        name: "AppUat"
+        icon: "icons/icon_uat.png"
+      android:
+        applicationId: "top.meu6jia.appuat"
+      ios:
+        bundleId: "top.meu6jia.appuat"
+    dev:
+      app:
+        name: "AppDev"
+        icon: "icons/icon_dev.png"
+      android:
+        applicationId: "top.meu6jia.appdev"
+      ios:
+        bundleId: "top.meu6jia.appdev"
