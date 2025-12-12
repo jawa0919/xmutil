@@ -1,0 +1,152 @@
+import 'dart:io' show Platform;
+import 'dart:ui' show PlatformDispatcher;
+
+import 'package:flutter/services.dart' show SystemUiMode, SystemChrome;
+import 'package:flutter/widgets.dart' show WidgetsFlutterBinding, debugPrint;
+
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class GlobalUtil {
+  GlobalUtil._();
+
+  // 本地存储和文件夹路径
+  static late SharedPreferences pref;
+  static late String docsDir;
+  static late String tempDir;
+
+  // 设备信息
+  static Map<String, dynamic>? _deviceInfo;
+  static get _sdkInt =>
+      _deviceInfo?['version']?['sdkInt']?.toString() ??
+      _deviceInfo?['systemVersion']?.toString() ??
+      '0';
+  static double get systemVersion => double.parse(_sdkInt);
+  static get _brand => _deviceInfo?['brand'] ?? _deviceInfo?['model'] ?? '';
+  static String get brand => _brand.toString().toLowerCase();
+  static get _model => _deviceInfo?['model'] ?? _deviceInfo?['modelName'] ?? '';
+  static String get model => _model.toString().toLowerCase();
+
+  // 应用信息
+  static PackageInfo? _packageInfo;
+  static String get appName => _packageInfo?.appName ?? '';
+  static String get appId => _packageInfo?.packageName ?? '';
+  static String get buildVersion => _packageInfo?.version ?? '';
+  static String get buildNumber => _packageInfo?.buildNumber ?? '';
+  static String get buildSignature => _packageInfo?.buildSignature ?? '';
+  static String get appUserAgent => '$appId($buildVersion;$buildNumber)';
+
+  // 屏幕信息
+  static final Map<String, dynamic> _screenInfo = {};
+  static double get displayWidth => _screenInfo['displayWidth'] ?? 0;
+  static double get displayHeight => _screenInfo['displayHeight'] ?? 0;
+  static double get windowWidth => _screenInfo['windowWidth'] ?? 0;
+  static double get windowHeight => _screenInfo['windowHeight'] ?? 0;
+  static double get devicePixelRatio => _screenInfo['devicePixelRatio'] ?? 0;
+  static double get viewPaddingTop => _screenInfo['viewPaddingTop'] ?? 0;
+  static double get viewPaddingBottom => _screenInfo['viewPaddingBottom'] ?? 0;
+  static double get viewPaddingLeft => _screenInfo['viewPaddingLeft'] ?? 0;
+  static double get viewPaddingRight => _screenInfo['viewPaddingRight'] ?? 0;
+
+  /// 初始化
+  static Future<SharedPreferences> init() async {
+    debugPrint('global_util.dart~init: ');
+    WidgetsFlutterBinding.ensureInitialized();
+    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    pref = await SharedPreferences.getInstance();
+    try {
+      docsDir = (await getApplicationDocumentsDirectory()).path;
+      tempDir = (await getTemporaryDirectory()).path;
+    } catch (e) {
+      docsDir = '/';
+      tempDir = '/';
+    }
+    debugPrint('global_util.dart~docsDir: $docsDir');
+    debugPrint('global_util.dart~tempDir: $tempDir');
+    _deviceInfo ??= (await DeviceInfoPlugin().deviceInfo).data;
+    debugPrint('global_util.dart~_deviceInfo: $_deviceInfo');
+    _packageInfo ??= await PackageInfo.fromPlatform();
+    debugPrint('global_util.dart~_packageInfo: $_packageInfo');
+    PlatformDispatcher.instance.onMetricsChanged = () {
+      debugPrint('global_util.dart~onMetricsChanged: ');
+      final v = PlatformDispatcher.instance.views.last;
+      _screenInfo.addAll({'displayWidth': v.display.size.width});
+      _screenInfo.addAll({'displayHeight': v.display.size.height});
+      _screenInfo.addAll({'windowWidth': v.physicalSize.width});
+      _screenInfo.addAll({'windowHeight': v.physicalSize.height});
+      _screenInfo.addAll({'devicePixelRatio': v.devicePixelRatio});
+      _screenInfo.addAll({'viewPaddingTop': v.viewPadding.top});
+      _screenInfo.addAll({'viewPaddingBottom': v.viewPadding.bottom});
+      _screenInfo.addAll({'viewPaddingLeft': v.viewPadding.left});
+      _screenInfo.addAll({'viewPaddingRight': v.viewPadding.right});
+      debugPrint('global_util.dart~_screenInfo: $_screenInfo');
+    };
+    final v = PlatformDispatcher.instance.views.last;
+    _screenInfo.addAll({'displayWidth': v.display.size.width});
+    _screenInfo.addAll({'displayHeight': v.display.size.height});
+    _screenInfo.addAll({'windowWidth': v.physicalSize.width});
+    _screenInfo.addAll({'windowHeight': v.physicalSize.height});
+    _screenInfo.addAll({'devicePixelRatio': v.devicePixelRatio});
+    _screenInfo.addAll({'viewPaddingTop': v.viewPadding.top});
+    _screenInfo.addAll({'viewPaddingBottom': v.viewPadding.bottom});
+    _screenInfo.addAll({'viewPaddingLeft': v.viewPadding.left});
+    _screenInfo.addAll({'viewPaddingRight': v.viewPadding.right});
+    debugPrint('global_util.dart~_screenInfo: $_screenInfo');
+    return pref;
+  }
+
+  static bool get isProduct => bool.fromEnvironment('dart.vm.product');
+  static bool get isWeb => bool.fromEnvironment('dart.library.js_util');
+  static bool get isAndroid => Platform.isAndroid;
+  static bool get isIOS => Platform.isIOS;
+
+  /// android sdk21-android 5.0-Lollipop
+  static bool get isAndroidSdk21 => isAndroid && systemVersion >= 21;
+
+  /// android sdk24-android 7.0-Nougat
+  static bool get isAndroidSdk24 => isAndroid && systemVersion >= 24;
+
+  /// android sdk27-android 8.1-Oreo
+  static bool get isAndroidSdk27 => isAndroid && systemVersion >= 27;
+
+  /// android sdk28-android 9-Pie
+  static bool get isAndroidSdk28 => isAndroid && systemVersion >= 28;
+
+  /// android sdk29-android 10-Q
+  static bool get isAndroidSdk29 => isAndroid && systemVersion >= 29;
+
+  /// android sdk30-android 11-R
+  static bool get isAndroidSdk30 => isAndroid && systemVersion >= 30;
+
+  /// android sdk31-android 12-S
+  static bool get isAndroidSdk31 => isAndroid && systemVersion >= 31;
+
+  /// android sdk34-android 14-UpsideDownCake
+  static bool get isAndroidSdk34 => isAndroid && systemVersion >= 34;
+
+  /// android sdk35-android 15-VanillaIceCream
+  static bool get isAndroidSdk35 => isAndroid && systemVersion >= 35;
+
+  /// android sdk36-android 16-Baklava
+  static bool get isAndroidSdk36 => isAndroid && systemVersion >= 36;
+
+  /// Ios 12.0
+  static bool get isIos12 => isIOS && systemVersion >= 12;
+
+  /// Ios 14.0
+  static bool get isIos14 => isIOS && systemVersion >= 14;
+
+  /// Ios 15.0
+  static bool get isIos15 => isIOS && systemVersion >= 15;
+
+  /// Ios 16.0
+  static bool get isIos16 => isIOS && systemVersion >= 16;
+
+  /// Ios 17.0
+  static bool get isIos17 => isIOS && systemVersion >= 17;
+
+  /// Ios 18.0
+  static bool get isIos18 => isIOS && systemVersion >= 18;
+}
