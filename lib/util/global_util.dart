@@ -8,6 +8,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher_string.dart' show launchUrlString;
 
 class GlobalUtil {
   GlobalUtil._();
@@ -19,11 +20,11 @@ class GlobalUtil {
 
   // 设备信息
   static Map<String, dynamic>? _deviceInfo;
-  static get _sdkInt =>
+  static String get systemVersion =>
       _deviceInfo?['version']?['sdkInt']?.toString() ??
       _deviceInfo?['systemVersion']?.toString() ??
       '0';
-  static double get systemVersion => double.parse(_sdkInt);
+  static double get sdkInt => double.parse(systemVersion.split('.').first);
   static get _brand => _deviceInfo?['brand'] ?? _deviceInfo?['model'] ?? '';
   static String get brand => _brand.toString().toLowerCase();
   static get _model => _deviceInfo?['model'] ?? _deviceInfo?['modelName'] ?? '';
@@ -103,50 +104,81 @@ class GlobalUtil {
   static bool get isIOS => Platform.isIOS;
 
   /// android sdk21-android 5.0-Lollipop
-  static bool get isAndroidSdk21 => isAndroid && systemVersion >= 21;
+  static bool get isAndroidSdk21 => isAndroid && sdkInt >= 21;
 
   /// android sdk24-android 7.0-Nougat
-  static bool get isAndroidSdk24 => isAndroid && systemVersion >= 24;
+  static bool get isAndroidSdk24 => isAndroid && sdkInt >= 24;
 
   /// android sdk27-android 8.1-Oreo
-  static bool get isAndroidSdk27 => isAndroid && systemVersion >= 27;
+  static bool get isAndroidSdk27 => isAndroid && sdkInt >= 27;
 
   /// android sdk28-android 9-Pie
-  static bool get isAndroidSdk28 => isAndroid && systemVersion >= 28;
+  static bool get isAndroidSdk28 => isAndroid && sdkInt >= 28;
 
   /// android sdk29-android 10-Q
-  static bool get isAndroidSdk29 => isAndroid && systemVersion >= 29;
+  static bool get isAndroidSdk29 => isAndroid && sdkInt >= 29;
 
   /// android sdk30-android 11-R
-  static bool get isAndroidSdk30 => isAndroid && systemVersion >= 30;
+  static bool get isAndroidSdk30 => isAndroid && sdkInt >= 30;
 
   /// android sdk31-android 12-S
-  static bool get isAndroidSdk31 => isAndroid && systemVersion >= 31;
+  static bool get isAndroidSdk31 => isAndroid && sdkInt >= 31;
 
   /// android sdk34-android 14-UpsideDownCake
-  static bool get isAndroidSdk34 => isAndroid && systemVersion >= 34;
+  static bool get isAndroidSdk34 => isAndroid && sdkInt >= 34;
 
   /// android sdk35-android 15-VanillaIceCream
-  static bool get isAndroidSdk35 => isAndroid && systemVersion >= 35;
+  static bool get isAndroidSdk35 => isAndroid && sdkInt >= 35;
 
   /// android sdk36-android 16-Baklava
-  static bool get isAndroidSdk36 => isAndroid && systemVersion >= 36;
+  static bool get isAndroidSdk36 => isAndroid && sdkInt >= 36;
 
   /// Ios 12.0
-  static bool get isIos12 => isIOS && systemVersion >= 12;
+  static bool get isIos12 => isIOS && sdkInt >= 12;
 
   /// Ios 14.0
-  static bool get isIos14 => isIOS && systemVersion >= 14;
+  static bool get isIos14 => isIOS && sdkInt >= 14;
 
   /// Ios 15.0
-  static bool get isIos15 => isIOS && systemVersion >= 15;
+  static bool get isIos15 => isIOS && sdkInt >= 15;
 
   /// Ios 16.0
-  static bool get isIos16 => isIOS && systemVersion >= 16;
+  static bool get isIos16 => isIOS && sdkInt >= 16;
 
   /// Ios 17.0
-  static bool get isIos17 => isIOS && systemVersion >= 17;
+  static bool get isIos17 => isIOS && sdkInt >= 17;
 
   /// Ios 18.0
-  static bool get isIos18 => isIOS && systemVersion >= 18;
+  static bool get isIos18 => isIOS && sdkInt >= 18;
+
+  /// 系统浏览器打开网页
+  static Future<bool> openSystemBrowser(String url) async {
+    if (!url.startsWith('http')) throw Exception('url must start with http');
+    return await launchUrlString(url);
+  }
+
+  /// 打电话
+  static Future<bool> callPhone(String phoneNumber) async {
+    if (!phoneNumber.startsWith('tel:')) phoneNumber = 'tel:$phoneNumber';
+    return await launchUrlString(phoneNumber);
+  }
+
+  /// 发短信
+  static Future<bool> sendSms(String phoneNumber, [String body = '']) async {
+    if (!phoneNumber.startsWith('sms:')) phoneNumber = 'sms:$phoneNumber';
+    phoneNumber += Platform.isIOS ? '&' : '?';
+    phoneNumber += 'body=$body';
+    return await launchUrlString(phoneNumber);
+  }
+
+  /// 发送邮件
+  static Future<bool> sendEmail(
+    String email, [
+    String subject = '',
+    String body = '',
+  ]) async {
+    if (!email.contains('@')) throw Exception('email must contain @');
+    email += '?subject=$subject&body=$body';
+    return await launchUrlString(email);
+  }
 }
