@@ -1,1 +1,2 @@
-export 'util/global_util.dart';
+export './util/ex_object.dart';
+export './util/global_util.dart';
