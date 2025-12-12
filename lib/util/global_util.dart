@@ -9,6 +9,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher_string.dart' show launchUrlString;
+import 'package:share_plus/share_plus.dart';
 
 class GlobalUtil {
   GlobalUtil._();
@@ -180,5 +181,21 @@ class GlobalUtil {
     if (!email.contains('@')) throw Exception('email must contain @');
     email += '?subject=$subject&body=$body';
     return await launchUrlString(email);
+  }
+
+  /// 分享文本
+  static Future<bool> shareText(String text) async {
+    final params = ShareParams(text: text);
+    return await SharePlus.instance
+        .share(params)
+        .then((v) => v.status == ShareResultStatus.success);
+  }
+
+  /// 分享文件
+  static Future<bool> shareFile(String text, String filePath) async {
+    final params = ShareParams(text: text, files: [XFile(filePath)]);
+    return await SharePlus.instance
+        .share(params)
+        .then((v) => v.status == ShareResultStatus.success);
   }
 }
