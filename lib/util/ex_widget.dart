@@ -86,7 +86,6 @@ class SystemBar {
   /// 当[scaffoldBackgroundColor]为亮色时，状态栏图标为暗色，导航栏图标为亮色
   static SystemUiOverlayStyle style(Color scaffoldBackgroundColor) {
     var darkest = scaffoldBackgroundColor.computeLuminance() < 0.5;
-    debugPrint('ex_widget.dart~83: $darkest');
     var bh = darkest ? Brightness.dark : Brightness.light;
     var bhIcon = darkest ? Brightness.light : Brightness.dark;
     var bg = _flutterView.physicalSize.height == _display.size.height
