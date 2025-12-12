@@ -1,0 +1,147 @@
+import 'dart:ui' show PlatformDispatcher, FlutterView, Display;
+
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
+
+extension OnTapContainer on Container {
+  Widget onTap(GestureTapCallback? onTap) {
+    return GestureDetector(onTap: onTap, child: this);
+  }
+}
+
+extension OnTapText on Text {
+  Widget onTap(GestureTapCallback? onTap) {
+    return GestureDetector(onTap: onTap, child: this);
+  }
+}
+
+extension OnTapIcon on Icon {
+  Widget onTap(GestureTapCallback? onTap) {
+    return GestureDetector(onTap: onTap, child: this);
+  }
+}
+
+/// 在2000毫秒间内完成【连续点击10以上后再长按一次】进入全局hacker点击模式
+extension OnHackerTapContainer on Container {
+  static bool _hackerEnable = false;
+  Widget onHackerTap(GestureTapCallback? onTap) {
+    const hackerTargetCount = 10;
+    const hackerTimeout = 2000;
+    var hackerLastTime = 0;
+    var hackerCount = 0;
+    return GestureDetector(
+      onTap: () {
+        if (_hackerEnable) {
+          onTap?.call();
+          return;
+        }
+        var current = DateTime.now().millisecondsSinceEpoch;
+        var travel = current - hackerLastTime;
+        if (travel > 0 && travel < hackerTimeout) {
+          hackerCount++;
+        } else {
+          hackerCount = 1;
+        }
+        hackerLastTime = current;
+      },
+      onLongPress: () {
+        if (hackerCount >= hackerTargetCount) {
+          _hackerEnable = true;
+          onTap?.call();
+        }
+      },
+      child: AnimatedRotation(
+        turns: _hackerEnable ? 1 : 0,
+        duration: const Duration(milliseconds: 200),
+        child: this,
+      ),
+    );
+  }
+}
+
+class SystemBar {
+  SystemBar._();
+
+  static FlutterView get _flutterView => PlatformDispatcher.instance.views.last;
+  static Display get _display => _flutterView.display;
+
+  static double get displayWidth => _display.size.width;
+  static double get displayHeight => _display.size.height;
+  static double get windowWidth => _flutterView.physicalSize.width;
+  static double get windowHeight => _flutterView.physicalSize.height;
+  static double get devicePixelRatio => _flutterView.devicePixelRatio;
+  static double get statusBarHeight => _flutterView.viewPadding.top;
+  static double get navigationBarHeight => _flutterView.viewPadding.bottom;
+  static bool get isFullScreenWidth => displayWidth == windowWidth;
+  static bool get isFullScreenHeight => displayHeight == windowHeight;
+  static bool get isFullScreen => isFullScreenWidth && isFullScreenHeight;
+  static bool get isPlatformDark =>
+      SchedulerBinding.instance.platformDispatcher.platformBrightness ==
+      Brightness.dark;
+
+  /// 获取指定scaffoldBackgroundColor颜色的SystemUiOverlayStyle
+  ///
+  /// 当[scaffoldBackgroundColor]为暗色时，状态栏图标为亮色，导航栏图标为暗色
+  /// 当[scaffoldBackgroundColor]为亮色时，状态栏图标为暗色，导航栏图标为亮色
+  static SystemUiOverlayStyle style(Color scaffoldBackgroundColor) {
+    var darkest = scaffoldBackgroundColor.computeLuminance() < 0.5;
+    debugPrint('ex_widget.dart~83: $darkest');
+    var bh = darkest ? Brightness.dark : Brightness.light;
+    var bhIcon = darkest ? Brightness.light : Brightness.dark;
+    var bg = _flutterView.physicalSize.height == _display.size.height
+        ? Colors.transparent
+        : scaffoldBackgroundColor;
+    return SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarBrightness: bh,
+      statusBarIconBrightness: bhIcon,
+      systemStatusBarContrastEnforced: false,
+
+      systemNavigationBarColor: bg,
+      systemNavigationBarDividerColor: bg,
+      systemNavigationBarIconBrightness: bhIcon,
+      systemNavigationBarContrastEnforced: false,
+    );
+  }
+}
+
+extension ResetThemeData on ThemeData {
+  Brightness get _reverseBrightness => Brightness.values[brightness.index ^ 1];
+  FlutterView get _flutterView => PlatformDispatcher.instance.views.last;
+  Color get _bottomColor =>
+      _flutterView.display.size.height == _flutterView.physicalSize.height
+      ? Colors.transparent
+      : scaffoldBackgroundColor;
+
+  ThemeData get reset => copyWith(
+    appBarTheme: AppBarThemeData(
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
+      centerTitle: true,
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarBrightness: brightness,
+        statusBarIconBrightness: _reverseBrightness,
+        systemStatusBarContrastEnforced: false,
+
+        systemNavigationBarColor: _bottomColor,
+        systemNavigationBarDividerColor: _bottomColor,
+        systemNavigationBarIconBrightness: _reverseBrightness,
+        systemNavigationBarContrastEnforced: false,
+      ),
+    ),
+    cardTheme: CardThemeData(
+      color: colorScheme.surfaceContainerLow,
+      shadowColor: Colors.transparent,
+      elevation: 0,
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+        shadowColor: WidgetStateProperty.all(Colors.transparent),
+        elevation: WidgetStateProperty.all(0),
+      ),
+    ),
+  );
+}
