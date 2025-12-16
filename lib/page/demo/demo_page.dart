@@ -1,7 +1,4 @@
-import 'dart:ui' show PlatformDispatcher;
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show SystemUiOverlayStyle;
 
 class DemoPage extends StatefulWidget {
   static const String routeName = '/demo';
@@ -16,6 +13,7 @@ class _DemoPageState extends State<DemoPage> {
 
   void _incrementCounter() {
     _counter++;
+    if (_counter.isEven) {}
     setState(() {});
   }
 
@@ -24,20 +22,28 @@ class _DemoPageState extends State<DemoPage> {
     var bg = Theme.of(context).colorScheme.primary;
     // bg = Colors.red;
     return Scaffold(
+      backgroundColor: bg,
+      appBar: AppBar(
+        title: const Text('Demo Page'),
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+      ),
       extendBodyBehindAppBar: true,
       extendBody: true,
-      appBar: _buildAppBar(context, bg),
-      backgroundColor: bg,
       body: SingleChildScrollView(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               const Text('Page Top'),
+              ...List.generate(26, (i) => Text(String.fromCharCode(65 + i))),
               const Text('You have pushed the button this many times:'),
-              Text(
-                '$_counter',
-                style: Theme.of(context).textTheme.headlineMedium,
+              Container(
+                margin: const EdgeInsets.all(16),
+                child: Text(
+                  '$_counter',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
               ),
               ...List.generate(100, (i) => Text(i.toString())),
               const Text('Page Bottom'),
@@ -49,30 +55,6 @@ class _DemoPageState extends State<DemoPage> {
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ),
-    );
-  }
-
-  AppBar _buildAppBar(BuildContext context, Color backgroundColor) {
-    var darkest = backgroundColor.computeLuminance() < 0.5;
-    var br = darkest ? Brightness.dark : Brightness.light;
-    var brIcon = darkest ? Brightness.light : Brightness.dark;
-    var v = PlatformDispatcher.instance.views.last;
-    var isFullScreen = v.display.size.height == v.physicalSize.height;
-    var cl = isFullScreen ? Colors.transparent : backgroundColor;
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      surfaceTintColor: Colors.transparent,
-      systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarBrightness: br,
-        statusBarIconBrightness: brIcon,
-        systemStatusBarContrastEnforced: false,
-
-        systemNavigationBarColor: cl,
-        systemNavigationBarDividerColor: cl,
-        systemNavigationBarIconBrightness: brIcon,
-        systemNavigationBarContrastEnforced: false,
       ),
     );
   }
