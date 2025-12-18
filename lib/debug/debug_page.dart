@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class DemoPage extends StatefulWidget {
-  static const String routeName = '/demo';
-  const DemoPage({super.key});
+class DebugPage extends StatefulWidget {
+  static const String routeName = '/debug';
+  const DebugPage({super.key});
 
   @override
-  State<DemoPage> createState() => _DemoPageState();
+  State<DebugPage> createState() => _DebugPageState();
 }
 
-class _DemoPageState extends State<DemoPage> {
+class _DebugPageState extends State<DebugPage> {
   int _counter = 0;
 
   void _incrementCounter() {

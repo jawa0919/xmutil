@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'app_import.dart';
-import 'page/demo/demo_page.dart';
+import 'debug/debug_page.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -27,7 +27,7 @@ class App extends StatelessWidget {
       navigatorObservers: [ExDialog.observer],
       builder: (context, child) => ExDialog.builder(context, child),
 
-      home: const DemoPage(),
+      home: const DebugPage(),
     );
   }
 }
