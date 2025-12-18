@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'app_import.dart';
 import 'page/demo/demo_page.dart';
 
 class App extends StatelessWidget {
@@ -8,20 +9,25 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           brightness: Brightness.light,
           seedColor: Colors.deepPurple,
         ),
-      ),
+      ).reset,
       darkTheme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           brightness: Brightness.dark,
           seedColor: Colors.deepPurple,
         ),
-      ),
-      home: const DemoPage(),
+      ).reset,
       themeMode: ThemeMode.system,
+
+      navigatorObservers: [ExDialog.observer],
+      builder: (context, child) => ExDialog.builder(context, child),
+
+      home: const DemoPage(),
     );
   }
 }

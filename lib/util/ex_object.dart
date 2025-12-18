@@ -28,17 +28,23 @@ class ListDynamic {
 }
 
 extension TrueBool on bool? {
+  bool get random => this == math.Random().nextBool();
   bool get isNull => this == null;
   bool get isTrue => this == true;
   bool get isFalse => this == false;
 }
 
 extension RoundDouble on double {
+  static double get random => math.Random().nextDouble();
   double roundTo(num value) => (this * value).round() / value;
   double roundToPrecision(int precision) {
     final factor = math.pow(10, precision);
     return (this * factor).round() / factor;
   }
+}
+
+extension RoundInt on int {
+  int get random => math.Random().nextInt(this);
 }
 
 extension EmptyToNullString on String {

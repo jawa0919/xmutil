@@ -142,5 +142,17 @@ extension ResetThemeData on ThemeData {
         elevation: WidgetStateProperty.all(0),
       ),
     ),
+    textButtonTheme: TextButtonThemeData(
+      style: ButtonStyle(
+        shadowColor: WidgetStateProperty.all(Colors.transparent),
+        elevation: WidgetStateProperty.all(0),
+      ),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: ButtonStyle(
+        shadowColor: WidgetStateProperty.all(Colors.transparent),
+        elevation: WidgetStateProperty.all(0),
+      ),
+    ),
   );
 }

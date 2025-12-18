@@ -20,6 +20,7 @@ class _DemoPageState extends State<DemoPage> {
   @override
   Widget build(BuildContext context) {
     var bg = Theme.of(context).colorScheme.primary;
+    // bg = Theme.of(context).colorScheme.surface;
     // bg = Colors.red;
     return Scaffold(
       backgroundColor: bg,
