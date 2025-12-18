@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 class ExDialog {
@@ -8,8 +9,8 @@ class ExDialog {
   static final TransitionBuilder builder = FlutterSmartDialog.init();
   static final NavigatorObserver observer = FlutterSmartDialog.observer;
 
-  static void dismiss() {
-    SmartDialog.dismiss();
+  static void dismiss<T>({T? result}) {
+    SmartDialog.dismiss<T>(result: result);
   }
 
   static void showToast(String message) {
@@ -64,7 +65,7 @@ class ExDialog {
                   ),
                 Container(
                   padding: const EdgeInsets.all(16.0),
-                  constraints: BoxConstraints(minHeight: 150),
+                  constraints: BoxConstraints(minHeight: 120),
                   alignment: Alignment.center,
                   child: child,
                 ),
@@ -190,7 +191,7 @@ class ExDialog {
                   ),
                 ),
                 padding: MediaQuery.of(context).padding.copyWith(top: 0),
-                constraints: BoxConstraints.expand(height: 300),
+                constraints: BoxConstraints(minHeight: 300),
                 child: child,
               ),
             ],

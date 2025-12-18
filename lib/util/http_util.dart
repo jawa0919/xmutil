@@ -1,11 +1,12 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:dio_log_plus/dio_log_plus.dart';
-import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:saver_gallery/saver_gallery.dart';
