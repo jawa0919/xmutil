@@ -1,7 +1,5 @@
 import 'dart:io' show Platform;
-import 'dart:ui' show PlatformDispatcher;
 
-import 'package:flutter/services.dart' show SystemUiMode, SystemChrome;
 import 'package:flutter/widgets.dart' show WidgetsFlutterBinding, debugPrint;
 
 import 'package:device_info_plus/device_info_plus.dart';
@@ -40,23 +38,10 @@ class GlobalUtil {
   static String get buildSignature => _packageInfo?.buildSignature ?? '';
   static String get appUserAgent => '$appId($buildVersion;$buildNumber)';
 
-  // 屏幕信息
-  static final Map<String, dynamic> _screenInfo = {};
-  static double get displayWidth => _screenInfo['displayWidth'] ?? 0;
-  static double get displayHeight => _screenInfo['displayHeight'] ?? 0;
-  static double get windowWidth => _screenInfo['windowWidth'] ?? 0;
-  static double get windowHeight => _screenInfo['windowHeight'] ?? 0;
-  static double get devicePixelRatio => _screenInfo['devicePixelRatio'] ?? 0;
-  static double get viewPaddingTop => _screenInfo['viewPaddingTop'] ?? 0;
-  static double get viewPaddingBottom => _screenInfo['viewPaddingBottom'] ?? 0;
-  static double get viewPaddingLeft => _screenInfo['viewPaddingLeft'] ?? 0;
-  static double get viewPaddingRight => _screenInfo['viewPaddingRight'] ?? 0;
-
   /// 初始化
   static Future<SharedPreferences> init() async {
     debugPrint('global_util.dart~init: ');
     WidgetsFlutterBinding.ensureInitialized();
-    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     pref = await SharedPreferences.getInstance();
     try {
       docsDir = (await getApplicationDocumentsDirectory()).path;
@@ -71,31 +56,6 @@ class GlobalUtil {
     debugPrint('global_util.dart~_deviceInfo: $_deviceInfo');
     _packageInfo ??= await PackageInfo.fromPlatform();
     debugPrint('global_util.dart~_packageInfo: $_packageInfo');
-    PlatformDispatcher.instance.onMetricsChanged = () {
-      debugPrint('global_util.dart~onMetricsChanged: ');
-      final v = PlatformDispatcher.instance.views.last;
-      _screenInfo.addAll({'displayWidth': v.display.size.width});
-      _screenInfo.addAll({'displayHeight': v.display.size.height});
-      _screenInfo.addAll({'windowWidth': v.physicalSize.width});
-      _screenInfo.addAll({'windowHeight': v.physicalSize.height});
-      _screenInfo.addAll({'devicePixelRatio': v.devicePixelRatio});
-      _screenInfo.addAll({'viewPaddingTop': v.viewPadding.top});
-      _screenInfo.addAll({'viewPaddingBottom': v.viewPadding.bottom});
-      _screenInfo.addAll({'viewPaddingLeft': v.viewPadding.left});
-      _screenInfo.addAll({'viewPaddingRight': v.viewPadding.right});
-      debugPrint('global_util.dart~_screenInfo: $_screenInfo');
-    };
-    final v = PlatformDispatcher.instance.views.last;
-    _screenInfo.addAll({'displayWidth': v.display.size.width});
-    _screenInfo.addAll({'displayHeight': v.display.size.height});
-    _screenInfo.addAll({'windowWidth': v.physicalSize.width});
-    _screenInfo.addAll({'windowHeight': v.physicalSize.height});
-    _screenInfo.addAll({'devicePixelRatio': v.devicePixelRatio});
-    _screenInfo.addAll({'viewPaddingTop': v.viewPadding.top});
-    _screenInfo.addAll({'viewPaddingBottom': v.viewPadding.bottom});
-    _screenInfo.addAll({'viewPaddingLeft': v.viewPadding.left});
-    _screenInfo.addAll({'viewPaddingRight': v.viewPadding.right});
-    debugPrint('global_util.dart~_screenInfo: $_screenInfo');
     return pref;
   }
 

@@ -13,6 +13,11 @@ class MapDynamic {
     if (key3 != null && map[key3] != null) return map[key3];
     return null;
   }
+
+  static bool has(dynamic map, String key) {
+    if (map is! Map<String, dynamic>) return false;
+    return map.containsKey(key);
+  }
 }
 
 class ListDynamic {
