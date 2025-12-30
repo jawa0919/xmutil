@@ -11,6 +11,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   cupertino_icons: ^1.0.8
   ##############################################################################
   shared_preferences: ^2.5.4
@@ -28,6 +30,7 @@ dependencies:
   dio_cookie_manager: ^3.3.0
   saver_gallery: ^4.1.0
   permission_handler: ^12.0.1
+  signals: ^6.3.0
   ##############################################################################
   flutter_smart_dialog: ^4.9.8+9
   ##############################################################################
