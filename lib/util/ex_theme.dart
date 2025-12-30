@@ -100,4 +100,42 @@ class SystemBar {
       systemNavigationBarContrastEnforced: false,
     );
   }
+
+  static SystemUiOverlayStyle light(Color scaffoldBackgroundColor) {
+    var bh = Brightness.light;
+    var bhIcon = Brightness.dark;
+    var bg = _flutterView.physicalSize.height == _display.size.height
+        ? Colors.transparent
+        : scaffoldBackgroundColor;
+    return SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarBrightness: bh,
+      statusBarIconBrightness: bhIcon,
+      systemStatusBarContrastEnforced: false,
+
+      systemNavigationBarColor: bg,
+      systemNavigationBarDividerColor: bg,
+      systemNavigationBarIconBrightness: bhIcon,
+      systemNavigationBarContrastEnforced: false,
+    );
+  }
+
+  static SystemUiOverlayStyle dark(Color scaffoldBackgroundColor) {
+    var bh = Brightness.dark;
+    var bhIcon = Brightness.light;
+    var bg = _flutterView.physicalSize.height == _display.size.height
+        ? Colors.transparent
+        : scaffoldBackgroundColor;
+    return SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarBrightness: bh,
+      statusBarIconBrightness: bhIcon,
+      systemStatusBarContrastEnforced: false,
+
+      systemNavigationBarColor: bg,
+      systemNavigationBarDividerColor: bg,
+      systemNavigationBarIconBrightness: bhIcon,
+      systemNavigationBarContrastEnforced: false,
+    );
+  }
 }

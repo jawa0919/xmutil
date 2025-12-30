@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show DeviceOrientation, SystemChrome;
+import 'package:flutter/services.dart'
+    show DeviceOrientation, SystemChrome, SystemUiMode;
 
 import 'app.dart';
 import 'app_import.dart';
@@ -18,6 +19,8 @@ void main(args) async {
 
 Future<void> _initSystemChrome() async {
   if (GlobalUtil.isAndroid || GlobalUtil.isIOS) {
+    SystemChrome.setSystemUIOverlayStyle(SystemBar.style(Colors.white));
+    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     List<DeviceOrientation> devOri = [];
     // // 平板设备横屏
     // devOri = [DeviceOrientation.landscapeLeft];

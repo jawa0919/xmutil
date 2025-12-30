@@ -39,88 +39,41 @@ class ExDialog {
     bool maskDismiss = false,
     bool backDismiss = true,
     Future<bool> Function(String buttonText)? beforeClose,
+    Widget Function(BuildContext context)? buildTextLoading,
   }) async {
     return await SmartDialog.show<String>(
       clickMaskDismiss: maskDismiss,
       backType: backDismiss ? SmartBackType.normal : SmartBackType.block,
-      builder: (context) {
-        return Dialog(
-          backgroundColor: Theme.of(context).cardTheme.color,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0),
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                if (title != null)
-                  Container(
-                    margin: const EdgeInsets.only(top: 16.0),
-                    child: Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+      builder: (context) => Dialog(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.0),
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              if (title != null)
                 Container(
-                  padding: const EdgeInsets.all(16.0),
-                  constraints: BoxConstraints(minHeight: 120),
-                  alignment: Alignment.center,
-                  child: child,
+                  margin: const EdgeInsets.only(top: 16.0),
+                  child: Text(
+                    title,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
                 ),
-                Divider(
-                  height: 1,
-                  color: Theme.of(context).colorScheme.outlineVariant,
-                ),
-                IntrinsicHeight(
-                  child: Row(
-                    children: [
-                      if (cancelText != null)
-                        Expanded(
-                          child: Builder(
-                            builder: (context) {
-                              final loading = StreamController<bool>();
-                              return TextButton(
-                                onPressed: () async {
-                                  if (beforeClose != null) {
-                                    loading.add(true);
-                                    final v = await beforeClose(cancelText);
-                                    loading.add(false);
-                                    if (!v) return;
-                                  }
-                                  SmartDialog.dismiss(result: cancelText);
-                                },
-                                child: StreamBuilder<bool>(
-                                  stream: loading.stream,
-                                  builder: (context, asyncSnapshot) {
-                                    if (asyncSnapshot.data == true) {
-                                      return SizedBox(
-                                        height: 24,
-                                        width: 24,
-                                        child: CircularProgressIndicator(),
-                                      );
-                                    }
-                                    return Text(
-                                      cancelText,
-                                      style: TextStyle(
-                                        color:
-                                            cancelColor ??
-                                            Theme.of(
-                                              context,
-                                            ).textTheme.bodyMedium?.color,
-                                      ),
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      VerticalDivider(
-                        width: 1,
-                        color: Theme.of(context).colorScheme.outlineVariant,
-                      ),
+              Container(
+                padding: const EdgeInsets.all(16.0),
+                constraints: BoxConstraints(minHeight: 120),
+                alignment: Alignment.center,
+                child: child,
+              ),
+              Divider(
+                height: 1,
+                color: Theme.of(context).colorScheme.outlineVariant,
+              ),
+              IntrinsicHeight(
+                child: Row(
+                  children: [
+                    if (cancelText != null)
                       Expanded(
                         child: Builder(
                           builder: (context) {
@@ -129,28 +82,31 @@ class ExDialog {
                               onPressed: () async {
                                 if (beforeClose != null) {
                                   loading.add(true);
-                                  final v = await beforeClose(confirmText);
+                                  final v = await beforeClose(cancelText);
                                   loading.add(false);
                                   if (!v) return;
                                 }
-                                SmartDialog.dismiss(result: confirmText);
+                                SmartDialog.dismiss(result: cancelText);
                               },
                               child: StreamBuilder<bool>(
                                 stream: loading.stream,
                                 builder: (context, asyncSnapshot) {
                                   if (asyncSnapshot.data == true) {
-                                    return SizedBox(
-                                      height: 24,
-                                      width: 24,
-                                      child: CircularProgressIndicator(),
-                                    );
+                                    return buildTextLoading?.call(context) ??
+                                        SizedBox(
+                                          height: 24,
+                                          width: 24,
+                                          child: CircularProgressIndicator(),
+                                        );
                                   }
                                   return Text(
-                                    confirmText,
+                                    cancelText,
                                     style: TextStyle(
                                       color:
-                                          confirmColor ??
-                                          Theme.of(context).colorScheme.primary,
+                                          cancelColor ??
+                                          Theme.of(
+                                            context,
+                                          ).colorScheme.onSurface,
                                     ),
                                   );
                                 },
@@ -159,14 +115,57 @@ class ExDialog {
                           },
                         ),
                       ),
-                    ],
-                  ),
+                    if (cancelText != null)
+                      VerticalDivider(
+                        width: 1,
+                        color: Theme.of(context).colorScheme.outlineVariant,
+                      ),
+                    Expanded(
+                      child: Builder(
+                        builder: (context) {
+                          final loading = StreamController<bool>();
+                          return TextButton(
+                            onPressed: () async {
+                              if (beforeClose != null) {
+                                loading.add(true);
+                                final v = await beforeClose(confirmText);
+                                loading.add(false);
+                                if (!v) return;
+                              }
+                              SmartDialog.dismiss(result: confirmText);
+                            },
+                            child: StreamBuilder<bool>(
+                              stream: loading.stream,
+                              builder: (context, asyncSnapshot) {
+                                if (asyncSnapshot.data == true) {
+                                  return buildTextLoading?.call(context) ??
+                                      SizedBox(
+                                        height: 24,
+                                        width: 24,
+                                        child: CircularProgressIndicator(),
+                                      );
+                                }
+                                return Text(
+                                  confirmText,
+                                  style: TextStyle(
+                                    color:
+                                        confirmColor ??
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
@@ -180,22 +179,18 @@ class ExDialog {
       backType: backDismiss ? SmartBackType.normal : SmartBackType.block,
       alignment: Alignment.bottomCenter,
       builder: (context) {
-        return SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).cardTheme.color,
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(16.0),
-                  ),
-                ),
-                padding: MediaQuery.of(context).padding.copyWith(top: 0),
-                constraints: BoxConstraints(minHeight: 300),
-                child: child,
-              ),
-            ],
+        return Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).cardTheme.color,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
           ),
+          padding: MediaQuery.of(context).padding.copyWith(top: 0),
+          constraints: BoxConstraints(
+            minHeight: 300,
+            maxHeight: 500,
+            minWidth: double.maxFinite,
+          ),
+          child: SingleChildScrollView(child: child),
         );
       },
     );
@@ -211,6 +206,7 @@ class ExDialog {
     bool maskDismiss = false,
     bool backDismiss = true,
     Future<bool> Function(String buttonText)? beforeClose,
+    Widget Function(BuildContext context)? buildTextLoading,
   }) async {
     return showDialog(
       SelectableText(message),
@@ -222,6 +218,7 @@ class ExDialog {
       maskDismiss: maskDismiss,
       backDismiss: backDismiss,
       beforeClose: beforeClose,
+      buildTextLoading: buildTextLoading,
     );
   }
 }
